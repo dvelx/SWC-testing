@@ -1,7 +1,7 @@
 import { api } from "../api/api";
 
 class ApiData {
-  getAllCars(per_page: number, page: number, vin?: number): Promise<any> {
+  getAllCars(per_page: number, page: number, vin?: string): Promise<any> {
     return api.get(`/cars-test?search=${vin}`, {
       params: {
         per_page: per_page,

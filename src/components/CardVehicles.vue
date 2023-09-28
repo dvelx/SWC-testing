@@ -1,16 +1,16 @@
 <template>
   <div class="card">
     <div class="card__image">
-      <img :src="cars.preview" :alt="cars.vehicle_name" />
+      <img :src="item.preview" :alt="item.vehicle_name" />
     </div>
     <div class="card__desc">
-      <h3 class="card__title">{{ cars.vehicle_name }}</h3>
-      <p class="card__info">{{ cars.vin }}</p>
-      <div class="card__divider" @click="console.log(cars)"></div>
+      <h3 class="card__title">{{ item.vehicle_name }}</h3>
+      <p class="card__info">{{ item.vin }}</p>
+      <div class="card__divider"></div>
       <div class="card__bottom">
-        <div class="card__badge">{{ cars.angles_count }}/30</div>
+        <div class="card__badge">{{ item.angles_count }}/30</div>
         <span class="card__last-date"
-          >{{ date(cars.created_at) }} days left</span
+          >{{ date(item.created_at) }} days left</span
         >
       </div>
     </div>
@@ -18,18 +18,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import CarsTypes from "../types/CarsTypes.ts";
 
-const props = defineProps({
-  item: {
-    type: Object,
-  },
-});
-const cars = computed(() => {
-  return props.item;
-});
+defineProps<{
+  item: CarsTypes
+}>();
 const date = (itemDate: number) => {
-  return new Date(itemDate).getDay();
+  if (typeof itemDate !== 'undefined') {
+    return new Date(itemDate).getDay();
+  }
 };
 </script>
 
