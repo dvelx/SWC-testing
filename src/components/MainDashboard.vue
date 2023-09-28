@@ -61,9 +61,10 @@
           />
         </svg>
         <input
-          type="text"
-          class="dashboard-top__input"
-          placeholder="Search VIN"
+            v-model.number="vin"
+            type="text"
+            class="dashboard-top__input"
+            placeholder="Search VIN"
         />
       </div>
       <div class="dashboard-top__select-block">
@@ -102,7 +103,7 @@
       <CardVehicles v-for="item of data.data" :key="item.id" :item="item" />
     </div>
     <div class="dashboard-bottom">
-      <div class="dashboard-bottom__showing">Showing 9 out of 256</div>
+      <div class="dashboard-bottom__showing">Showing 9 out of {{ totalCars }}</div>
       <div class="dashboard-bottom-pagination">
         <BasePagination
           v-model:current-page="page"
@@ -116,32 +117,31 @@
 <script setup lang="ts">
 import CardVehicles from "@/components/CardVehicles.vue";
 import ApiData from "../services/apiDataServices.ts";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { watch } from "vue";
 import BasePagination from "@/components/BasePagination.vue";
 import ApiTypes from "../types/ApiTypes.ts";
+import ResponseData from "../types/ResponseData.ts";
 
 const data = ref({} as ApiTypes);
 const limit = ref(9);
 const page = ref(1);
 const lastPage = ref(0);
 const totalCars = ref(0);
+const vin = ref(0)
 
 const loadData = () => {
-  ApiData.getAllCars(limit.value, page.value).then((res: any) => {
-    data.value = res.data;
-  });
+  ApiData.getAllCars(limit.value, page.value, vin.value)
+      .then((res: ResponseData) => data.value = res.data)
 };
-const calcLastPage = computed(() => {
-  lastPage.value = data.value.meta.last_page;
-});
-const calcTotalCars = computed(() => {
-  totalCars.value = data.value.meta.total;
-});
 
-watch([page, limit], () => {
+watch([page, limit, vin], () => {
   loadData();
 });
+watch([data], () => {
+  lastPage.value = data.value.meta.last_page
+  totalCars.value = data.value.meta.total
+})
 
 loadData();
 </script>

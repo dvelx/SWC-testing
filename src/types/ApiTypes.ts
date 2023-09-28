@@ -6,7 +6,7 @@ export default interface ApiTypes {
     preview: string;
     vehicle_name: string;
     vin: string;
-  }[];
+  };
   meta: {
     current_page: number;
     last_page: number;
